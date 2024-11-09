@@ -10,7 +10,7 @@
 - управлять своими бронированиями. <br/>
 
 **1. Бронирование занятия**
-![Изображение](https://github.com/Matyushchenko/SA_portfolio/blob/master/use_case_4_системабронирования-Страница%20—%201.jpg?raw=true "Бронирование занятия")
+![Изображение](https://github.com/Matyushchenko/SA_portfolio/blob/master/use_case_бронь_занятия.jpg "Бронирование занятия")
 
 |Заголовок|Бронирование занятия|
 |-|--------|
@@ -23,6 +23,6 @@
 
 **2. Управление бронирования**
 
-![Изображение](https://github.com/Matyushchenko/SA_portfolio/blob/master/use_case_4_системабронирования-Страница%20—%202.jpg?raw=true "Управление своими бронированиями")
+![Изображение](https://github.com/Matyushchenko/SA_portfolio/blob/master/use_case_управление_бронью.jpg "Управление своими бронированиями")
 
 
