@@ -19,9 +19,147 @@
 
 
 ***Решение:***</br>
-Постройте диаграмму последовательности с учётом всех вышеперечисленных конструкций. Отразите основные шаги оформления заказа, проверки промокода и оплаты, применяя UML-конструкции для альтернативных сценариев, асинхронных вызовов и группировки участников.
+РАзработаны диаграммы последовательности с учётом всех вышеперечисленных конструкций. Отразите основные шаги оформления заказа, проверки промокода и оплаты, применяя UML-конструкции для альтернативных сценариев, асинхронных вызовов и группировки участников.
 
-![UML Sequence диаграмма ](https://github.com/anastassaa/SA_portfolio/blob/master/UML%20Sequence%20Diagram.png)</br>
-**UML Sequence** </br>
+***Для удобства восприятия диграммы разделены на 4 процесса:***
+1) Заказ такси;
+2) Выполнение поездки;
+3) Оплата заказа;
+4) Завершение поездки.
 
-//www.plantuml.com/plantuml/png/hLRDJXDH6DtVfxXXBMpSkJ2uyWNa0IPOaoO818QeEw36DYaHuqPN2Bw0jxM52-MML_Zk6tc-SvrSPZgHnf-cqkbyvvplEz-P2-lxPR5N7hpUCiLckRDdvPlCPHPFv0e_n-BYiKprsXRxTiEONHHtDxkxnNPfL-I719dW_aqyil9Td7uGlwArBugttKOvg6U_2IybnA5SspW0zqUv8kHvKNRU5E-Qg4yIWF7nVJn4IvDLbOX7fBaLH-IpxRBxQgyuU6cCDMR3hZwb_XChdo4p4W-easayjXBGGLySHqmzYBTo0-Q0WdxrtLtiIS0unt682zoTmf09whnHvYnm3huZlFgaPrzpyUXipi--YLvRMxFoHPpwXgukyQMpZm6aZIewWIIgAfqDY9oHTSGfBb4Oe32rkAoqFGgS11HTBz63sTajRSqc5RZb_DaccO6shqh0qtiGqgc9ECFsREuFpH_2kd4YWEvfKfqfV8mNOQrCjNsbIXreePQR2ce1XwEGfWfLUarR87so05mnZQK1mdHZ0_GV7pakX4CsRR7LpZOILcoLO6YsbXdG1sA8VmrDgkdRBHyNLDZOIzMgr-eVjV8sc7cwQ54BgjZJj6j2z4sAFBrAKfNTrSAqR9pOmFqbNk3sJpxhWnm7Zl81CDAsxv8F1XO2QiTDGguwLDey_Of2BZu_4-YGs1v0RN6ZAfGyxj_LZpe9DP7gF4hv9fEJCG2dR5PxJFGOZAGo1-CigPEeOe0r-OXgYzzL7ZjHqUm1fy9SkdyEXgsIEBFPMf_dpNN7uSAw5phBy0kveoykcwa1cYHjNQ1s6G-LDz7mMJYhnaRZz5t3D91GPREcbqEI5rL7CHtPoc4coIVY_Lyb6Kt36kNt7y0vfxknkaTWKov6udMd6VRmkTl-L5NquluWqDdQxzGTq_3-bMj4_fDpP6XpZ-USDORTDiyweXuwxzfHAOm-FxEFB8ogJYj6tik8AVqlfrgDK8TQnt_uM-SN
+**UML Sequence "Заказ такси"** </br>
+![Заказ такси](https://github.com/user-attachments/assets/5a0dbbb0-3c7a-4e7f-a05f-b8e0658c0e01)
+```
+title Заказ такси 
+
+actor Пользователь as U
+
+participant "Приложение" as Ui
+participant "Сервер" as Server
+participant "Приложение для водителя" as Driver
+
+U -> Ui: Выбирает начальный и конечный пункты поездки
+activate Ui
+U -> Ui: Выбирает класс такси
+Ui -> Server: Отправка данных маршрута
+activate Server
+Server-> Server: Расчет стоимости поездки
+Server--> Ui: Получение стоимости поездки
+deactivate Server
+Ui-> U: Отображение рассчитаной стоимости поездки
+deactivate Ui
+alt Пользователь оформляет заказ
+    U -> Ui: Соглашается с ценой и нажимает "Заказать такси"
+    activate Ui
+    Ui-> Server: Поиск автомобиля
+    activate Server
+    note over Server: Поиск машины может занять до 3-х минут
+    activate Driver
+    Server-> Driver: Новая заявка
+    alt Заявка принята
+    Driver-> Driver: Водитель принял заявку
+    Driver -->Server: Результат поиска такси
+    deactivate Driver
+    Server--> Ui: Отображение результата поиска автомобиля
+    deactivate Server
+    Ui-> U: Отображение информации о найденом автомобиле и времени прибытия
+    
+    else Заявка отклонена
+    activate Driver
+    Driver-> Driver: Ни один водитель не принял заявку
+    activate Server
+    Driver -->Server: Результат поиска такси
+    deactivate Driver
+    Server--> Ui: Отображение результата поиска автомобиля
+    deactivate Server
+    Ui-> U: Сообщение: Свободных машин рядом нет, продолжаем поиск
+    end
+    
+else Пользователь изменяет параметры заказа
+    U -> Ui: Изменение начального/конечого пунктов поездки и/или класса такси
+    activate Server
+    Ui -> Server: Отправка данных маршрута
+    Server-> Server: Расчет стоимости поездки
+    Server--> Ui: Получение стоимости поездки
+    deactivate Server
+    Ui-> U: Отображение рассчитаной стоимости поездки
+
+else Пользователь отменяет заказ
+    U -> Ui: Нажимает кнопку "Отмена"
+    activate Server
+    Ui -> Server: Актуализация статуса заказа  
+    Server--> Ui: Заказ отменен
+    deactivate Server
+    Ui-> U: Заказ успешно отменен
+    deactivate Ui
+end
+```
+
+**UML Sequence "Выполнение поездки"** </br>
+![Выполнение поездки](https://github.com/user-attachments/assets/79fa0465-6852-4d36-99a9-2af352c97943)
+```
+title Оплата заказа
+
+
+actor Пользователь as U
+participant "Приложение Яндекс Такси" as Taxi
+participant "Сервер" as Server
+participant "Платежный шлюз" as Gateway
+participant "Антифрод-система" as Antifraud
+
+
+U -> Taxi: Отмечает наличие промокода
+Taxi -> U: Открывается поле ввода промокода
+U -> Taxi: Вводит промокод и нажимает "Применить промокод"
+Taxi-> Server: Запрос на проверку валидности промокода
+activate Server
+Server-> Server: Проверка валидности промокода
+
+
+alt Промокод невалиден
+    Server--> Taxi: Отображение результата проверки
+    deactivate Server
+    Taxi -> U: Вывод сообщения: "промокод не применен" и описания ошибки
+
+else Промокод валиден
+    activate Server
+    Server-> Server: Перерасчет стоимости поездки с учетом промокода
+    Server--> Taxi: Отображение результата проверки
+    deactivate Server
+    Taxi -> U: Вывод сообщения: "промокод успешно применен" и пересчитанной стоимости поездки
+    U -> Taxi: Соглашается с ценой и нажимает "Заказать такси"
+    Taxi -> Server: Изменение статуса промокода на "использован"
+    activate Gateway
+    Taxi-> Gateway: Отправляет запрос на оплату
+    activate Antifraud
+    Gateway -> Antifraud: Проверка заказа на мошенничество
+    Antifraud --> Gateway: Результаты проверки
+    deactivate Antifraud
+    Gateway -> Gateway: Списание средств с карты
+    alt Оплата неуспешна
+        Gateway -> Taxi: Статус неуспешной оплаты
+        Taxi-> U: Платеж неуспешен
+    else Оплата успешна
+        Gateway -> Taxi: Статус успешной оплаты
+        deactivate Gateway
+        Taxi-> U: Платеж успешен
+
+    end
+end
+```
+
+**UML Sequence "Оплата поездки"** </br>
+![Оплата](https://github.com/user-attachments/assets/8bc8c84d-8aae-42e6-acf7-776c7f7d4f43)
+```
+
+```
+
+**UML Sequence "Завершение поездки"** </br>
+![Завершение поездки](https://github.com/user-attachments/assets/d2052e0d-acf3-422a-9da3-af8de655b3d5)
+```
+
+```
+
+
+Все диаграммы разработаны с использованием: https://www.websequencediagrams.com/app
+
