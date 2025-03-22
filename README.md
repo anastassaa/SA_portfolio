@@ -2,4 +2,4 @@
 здесь представлены работы по системной аналитике.
 
 
-Use case, UML sequence, BPMN, спецификация RestAPI
+сценарии использования, UML sequence, BPMN, спецификация RestAPI
