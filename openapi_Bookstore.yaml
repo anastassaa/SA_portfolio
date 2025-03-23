@@ -672,7 +672,6 @@ components:
         publisher:
           type: string
           example: "Феникс"
-        # ИСПРАВЛЕНО: Добавлено отсутствующее свойство desctiption
         desctiption:
           type: string
           example: "Описание книги"
