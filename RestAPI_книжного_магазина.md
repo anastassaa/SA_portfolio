@@ -24,6 +24,8 @@
 - Блокируют и активируют аккаунты
 - Редактируют или отменяют заказы
 
-Спецификация OpenAPI: 
-https://editor.swagger.io/
+
+> [Спецификация OpenAPI](https://github.com/anastassaa/SA_portfolio/blob/master/openapi_Bookstore.yaml)</br>
+
+*Разработана с помощью https://editor.swagger.io/*
 
